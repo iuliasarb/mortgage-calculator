@@ -13,7 +13,13 @@ function calculateMortgage(p, r, n) {
 	//convert years to months
 	n = yearsToMonths(n);
 
-	return (r * p) * Math.pow((1 + r), n) / (Math.pow((1 + r), n) - 1);
+	var pmt = (r * p) * Math.pow((1 + r), n) / (Math.pow((1 + r), n) - 1);
+	if(isNaN(pmt)) {
+		alert('numbers please');
+		return '-';
+	} else {
+	return parseFloat(pmt.toFixed(2));
+	}
 }
 
 function percentToDecimal(percent) {
@@ -22,4 +28,22 @@ function percentToDecimal(percent) {
 function yearsToMonths(year) {
 	return year * 12;
 }
-console.log(calculateMortgage(200000, 6.5, 30));
+
+function postPayment(payment){
+	var htmlEl = document.getElementById('outMonthly');
+	htmlEl.innerText = payment + ' euro';
+}
+
+var btn = document.getElementById('btnCalculate');
+btn.onclick = function() {
+	var cost = document.getElementById('inCost').value;
+	var downPayment = document.getElementById('inDown').value;
+	var interest = document.getElementById('inAPR').value;
+	var term = document.getElementById('inPeriod').value;
+
+
+	var amountBorrowed = cost - downPayment;
+	var pmt = calculateMortgage(amountBorrowed, interest, term);
+
+	postPayment(pmt);
+};
